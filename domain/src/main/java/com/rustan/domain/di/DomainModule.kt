@@ -1,5 +1,7 @@
 package com.rustan.domain.di
 
+import com.rustan.domain.GetStoriesUseCase
+import com.rustan.domain.GetStoriesUseCaseImpl
 import com.rustan.domain.GetWeatherUseCase
 import com.rustan.domain.GetWeatherUseCaseImpl
 import com.rustan.domain.maper.MapEntities
@@ -12,5 +14,8 @@ val domainModule = module {
         GetWeatherUseCaseImpl(
             get(), get(named("dispatcherIO")), get()
         )
+    }
+    factory<GetStoriesUseCase> {
+        GetStoriesUseCaseImpl(get(), get(named("dispatcherIO")), get())
     }
 }

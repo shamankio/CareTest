@@ -2,6 +2,10 @@ package com.rustan.data.di
 
 import com.rustan.data.ApiWeatherService
 import com.rustan.data.ApiWeatherServiceImplement
+import com.rustan.data.ApiStoryService
+import com.rustan.data.StoryRepository
+import com.rustan.data.StoryRepositoryImpl
+import com.rustan.data.StoryServiceImplement
 import com.rustan.data.WeatherRepository
 import com.rustan.data.WeatherRepositoryImplement
 import com.squareup.moshi.Moshi
@@ -29,6 +33,9 @@ val networkModule = module {
     fun provideApi(retrofit: Retrofit): ApiWeatherService {
         return retrofit.create(ApiWeatherService::class.java)
     }
+    fun provideStoryApi(retrofit: Retrofit): ApiStoryService {
+        return retrofit.create(ApiStoryService::class.java)
+    }
     single { provideHttpClient() }
     single {
         Moshi.Builder()
@@ -41,6 +48,9 @@ val networkModule = module {
         )
     }
     single { provideApi(get()) }
+    single { provideStoryApi(get()) }
     single { ApiWeatherServiceImplement(get()) }
+    single { StoryServiceImplement(get()) }
     single<WeatherRepository> { WeatherRepositoryImplement(get()) }
+    single<StoryRepository> { StoryRepositoryImpl(get()) }
 }

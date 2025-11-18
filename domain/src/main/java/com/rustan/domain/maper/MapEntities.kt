@@ -1,6 +1,8 @@
 package com.rustan.domain.maper
 
+import com.rustan.data.model.PhotoDTO
 import com.rustan.data.model.WeatherResponseDTO
+import com.rustan.domain.entities.Story
 import com.rustan.domain.entities.Weather
 import java.util.Date
 
@@ -34,5 +36,8 @@ class MapEntities {
             visibility = weatherDTO.visibility,
             timestamp = weatherDTO.timestamp?.let { Date(it * 1000L) }
         )
+    }
+    fun mapPhotoDTOToStory(photoDTO: PhotoDTO): Story {
+       return Story(imageURL = photoDTO.urls.regular)
     }
 }

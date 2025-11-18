@@ -55,7 +55,7 @@ import java.util.Locale
 @Composable
 fun WeatherScreen(
     weatherViewModel: WeatherViewModel = koinViewModel(),
-    onNavigateToStories: (Boolean) -> Unit,
+    onNavigateToStories: (String) -> Unit,
     onRetryFetch: () -> Unit,
     isPad: Boolean = false,
     latitude: Double,
@@ -114,7 +114,7 @@ fun WeatherScreen(
                         Spacer(Modifier.height(32.dp))
 
                         Button(
-                            onClick = { onNavigateToStories(true) },
+                            onClick = { onNavigateToStories(weather?.name ?: "Paris") },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(12.dp))
@@ -149,12 +149,6 @@ fun WeatherScreen(
                         Text(
                             text = message,
                             color = Color.Red
-                        )
-                        Spacer(Modifier.height(16.dp))
-                        RetryButton(
-                            title = "Retry",
-                            isPad = isPad,
-                            onClick = onRetryFetch
                         )
                     }
                 }

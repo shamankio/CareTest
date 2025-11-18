@@ -9,7 +9,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,11 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
+import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rustan.splash.SplashScreen
 import com.rustan.ui.theme.KompanionCareTestTheme
 import com.rustan.weather.WeatherScreen
+import com.rustan.weather.navigation.navigateToWeather
 
 class MainActivity : ComponentActivity() {
 
@@ -70,6 +77,7 @@ class MainActivity : ComponentActivity() {
                 var showSplash by remember { mutableStateOf(true) }
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val navController = rememberNavController()
                     if (showSplash) {
                         SplashScreen(
                             showSplashScreen = showSplash,
@@ -81,13 +89,17 @@ class MainActivity : ComponentActivity() {
                         val lat = latitude
                         val lon = longitude
                         if (lat != null && lon != null) {
-                            WeatherScreen(
-                                onNavigateToStories = {},
-                                onRetryFetch = {},
+                            AppNavHost(
+                                navController = navController,
                                 isPad = false,
-                                latitude = lat,
-                                longitude = lon
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .consumeWindowInsets(innerPadding)
+                                    .windowInsetsPadding(
+                                        WindowInsets.safeDrawing,
+                                    ),
                             )
+                            navController.navigateToWeather(lat, lon)
                         } else {
                             Box(
                                 modifier = Modifier.fillMaxSize(),
@@ -115,6 +127,8 @@ class MainActivity : ComponentActivity() {
                         // You can now use the location object
                     } else {
                         Log.d("MainActivity", "Last location is null")
+                        this.latitude = 37.773972
+                        this.longitude = -122.431297
                         // Handle case where location is null (e.g., location is turned off in settings)
                     }
                 }
@@ -126,18 +140,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     KompanionCareTestTheme {
-        Greeting("Android")
+//        Greeting("Android")
     }
 }
